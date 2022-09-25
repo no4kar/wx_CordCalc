@@ -1,0 +1,54 @@
+- CREATE A TABLE
+ CREATE TABLE user (Name TEXT, Age INT, Country TEXT);
+ CREATE TABLE coordinats (type TEXT, x REAL, y REAL, angle REAL, i REAL, j REAL);
+
+- INSERT DATA
+ INSERT INTO user (Name, Age, Country) VALUES ('Itokiana', 5, 'Madagascar');
+ INSERT INTO user (Name, Age, Country) VALUES ('John', 26, 'USA') ;
+ INSERT INTO user (Name, Age, Country) VALUES ('Louis', 34, 'France') ;
+ INSERT INTO user (Name, Age, Country) VALUES ('Lee', 22, 'Japan') ;
+ INSERT INTO user (Name, Age, Country) VALUES ('Chris', 19, 'Canada') ;
+ INSERT INTO user (Name, Age, Country) VALUES ('Unknown', 10, 'Anywhere') ;
+
+- UPDATE DATA
+ UPDATE user SET Name="Njaka" WHERE Name="Itokiana";
+
+- DELETE DATA
+ DELETE FROM user WHERE Name='Unknown';
+
+- SELECT DATA
+ SELECT * FROM user ORDER BY Name ASC;
+
+
+ 	/*ComboBox*/
+	wxArrayString choices1;
+	choices1.Add(wxT("Line"));
+	choices1.Add(wxT("Arc"));
+	wxComboBox* p_CB1 = new wxComboBox(this, ID_CB1, wxT("Line/Arc"), wxDefaultPosition, wxDefaultSize, choices1);
+	p_CB1->SetMinSize(wxSize(0, row_hight));/**/
+	/*cb_ptr->SetLabelText("Line/Arc");*/
+	choices1.Add(wxT("SOMEONE"));
+
+#if 0/*wxGrid*/
+
+	wxGrid* gr1_ptr = new wxGrid(this, ID_GRID1, wxPoint(10, (2 * row_hight)), wxSize(300, (2 * row_hight)));
+	
+#elif 0/*wxGridSizer*/
+
+	wxGridSizer* p_GrS1 = new wxGridSizer(1, 5, wxSize(3, 7));
+	const int flags_for_GrS1 = wxHORIZONTAL | wxALL;/*flags for wxGridSizer* grs1_ptr*/
+
+	p_GrS1->Add(p_CB1, 1, flags_for_GrS1, 2);
+	p_GrS1->Add(new wxTextCtrl(this, wxID_ANY), 1, flags_for_GrS1, 2);
+	p_GrS1->Add(new wxTextCtrl(this, wxID_ANY), 1, flags_for_GrS1);
+	p_GrS1->Add(new wxTextCtrl(this, wxID_ANY), 1, flags_for_GrS1);
+	p_GrS1->Add(new wxTextCtrl(this, wxID_ANY), 1, flags_for_GrS1);
+	
+
+	this->m_p_mainBxSzr->Add(m_p_strCrdSzr, 0, wxEXPAND | wxALL, 5);/**/
+
+	SetSizer(this->m_p_mainBxSzr); // use the sizer for layout
+	this->m_p_mainBxSzr->Fit(this);/*fit empty space in window*/
+	this->m_p_mainBxSzr->SetSizeHints(this); // set hints to honor min size
+
+#elif 0/*wxBoxSizer*/
