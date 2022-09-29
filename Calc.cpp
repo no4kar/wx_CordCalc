@@ -64,7 +64,7 @@ FRAME_CLASS_NAME::CalcStrCrd(
 	prvKwnFlg = GetKnownFlag(prvPrms);
 
 	/*(kwnFlg ^ (BIT_FLAG(0) | BIT_FLAG(1) | BIT_FLAG(2))) == NULL -- set of this bits need only, other bits must be zero*/
-	/*(kwnFlg & (BIT_FLAG(0) | BIT_FLAG(1) | BIT_FLAG(2))) != NULL -- one of this bit set, other bits dont matter*/
+	/*(kwnFlg & (BIT_FLAG(0) | BIT_FLAG(1) | BIT_FLAG(2))) != NULL -- one of this bit set, other bits don't matter*/
 	/*(kwnFlg & BIT_FLAG(0)) && (kwnFlg & BIT_FLAG(1)) && (kwnFlg & BIT_FLAG(2)) -- set of this bits need only, other bits dont matter*/
 
 	switch (crntKwnFlg)
@@ -155,7 +155,6 @@ FRAME_CLASS_NAME::CalcStrCrd(
 
 		/*#############################################################################*/
 
-
 	case BIT_FLAG(LINE) | BIT_FLAG(Y_CRD) | BIT_FLAG(ANGLE):/*crntStrCrd = CmbBx:Line X:? Y:! Angle:!*/
 
 		if ((prvKwnFlg & BIT_FLAG(X_CRD))
@@ -164,6 +163,25 @@ FRAME_CLASS_NAME::CalcStrCrd(
 			result = (result) ? (bool)this->SetParamsToStrCrd(crntIndx, crntPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
 		}
 
+		break;
+
+		/*#############################################################################*/
+
+	case BIT_FLAG(LINE) | BIT_FLAG(LENGTH):/*crntStrCrd = CmbBx:Line Length:!*/
+		
+		if ((nxtKwnFlg & BIT_FLAG(LINE))
+			&& (nxtKwnFlg & BIT_FLAG(X_CRD))
+			&& (nxtKwnFlg & BIT_FLAG(Y_CRD))
+			&& (nxtKwnFlg & BIT_FLAG(LENGTH))
+
+			&& (prvKwnFlg & (BIT_FLAG(LINE) | BIT_FLAG(ARC_CW) | BIT_FLAG(ARC_CCW)))
+			&& (prvKwnFlg & BIT_FLAG(X_CRD))
+			&& (prvKwnFlg & BIT_FLAG(Y_CRD))
+			) {/*prvStrCrd = X:! Y:! other dont matter*/
+				result = CANCAT2(ClcLinLin, 7)(prvPrms, crntPrms, nxtPrms);
+			result = (result) ? (bool)this->SetParamsToStrCrd(crntIndx, crntPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+		}
+		/**/
 		break;
 
 		/*#############################################################################*/

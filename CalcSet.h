@@ -217,10 +217,18 @@ ClcLinLin7(
 	, wxArrayString& nxtPrms
 ) {
 	/*known variables*/
-	double x0, y0, len1, x1, y1, x2, y2, len2;
+	double x0, y0, len1, x2, y2, len2;
 	/*intermediate variables*/
 	double a, h, /*distance between circles centers(cc)*/d, /*angle to the X-axis*/angle;
-	char optn = (crntPrms[PRM(OPTION)].c_str())[0];
+	char optn;
+
+#if 0
+	wxString str = crntPrms[PRM(OPTION)];
+	optn = *(str.c_str());
+#else
+	optn = *(crntPrms[PRM(OPTION)].c_str());
+#endif /**/
+
 	wxRealPoint cc, point;
 
 	if (!prvPrms[PRM(X_CRD)].ToDouble(&x0)

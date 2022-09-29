@@ -53,11 +53,11 @@ FRAME_CLASS_NAME::CreateStrCrd(
 
 	p_CmbBx = new wxComboBox(this
 		, wxID_ANY
-		, params[0]
+		, std::move("")
 		, wxDefaultPosition
 		, wxDefaultSize
 		, this->m_cmbx_optn
-		, wxTE_CENTRE | wxCB_READONLY | wxCB_SORT
+		, wxTE_CENTRE /* | wxCB_READONLY */ | wxCB_SORT
 	);/*++++++++ Create ComboBox(Option) for the BxSzr ++++++++*/	TO_HISTORY(p_CmbBx);
 	p_strCrd->Add(p_CmbBx, 1, flags_for_BxSzr, 2);/*++++++++ Add Create ComboBox(Option) in the BxSzr ++++++++*/
 

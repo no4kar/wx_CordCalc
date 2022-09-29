@@ -96,11 +96,6 @@ FRAME_CLASS_NAME::OnCalcStrCrd(
 	wxCommandEvent& evnt
 ) {
 	bool result = false;
-	do
-	{
-		
-
-	} while (result);
 	
 	for (size_t i = 0, length = this->m_p_strCrdSzr->GetItemCount()
 		; i < length

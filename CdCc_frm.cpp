@@ -115,20 +115,20 @@ FRAME_CLASS_NAME::FRAME_CLASS_NAME(const wxString& title)
 #if defined(_DEBUG) && 1
 	this->m_dflt_vld[1] = wxString::FromDouble(0.0, 3);
 	this->m_dflt_vld[2] = wxString::FromDouble(0.0, 3);
-	this->m_dflt_vld[3] = wxString::FromDouble(-90.0, 3);
-	this->m_dflt_vld[6] = wxString::FromDouble(20.0, 3);
+	this->m_dflt_vld[3] = "?";
+	this->m_dflt_vld[6] = "?";
 	this->m_p_strCrdSzr->Add(this->CreateStrCrd(this->m_dflt_vld), 0, wxEXPAND | wxALL, 5);
 
 	this->m_dflt_vld[1] = "?";
 	this->m_dflt_vld[2] = "?";
-	this->m_dflt_vld[3] = wxString::FromDouble(45.0, 3);
+	this->m_dflt_vld[3] = "?";
 	this->m_dflt_vld[6] = wxString::FromDouble(14.142, 3);
 	this->m_p_strCrdSzr->Add(this->CreateStrCrd(this->m_dflt_vld), 0, wxEXPAND | wxALL, 5);
 
 	this->m_dflt_vld[1] = wxString::FromDouble(0.0, 3);
 	this->m_dflt_vld[2] = wxString::FromDouble(20.0, 3);
 	this->m_dflt_vld[3] = "?";
-	this->m_dflt_vld[6] = "?";
+	this->m_dflt_vld[6] = wxString::FromDouble(14.142, 3);
 	this->m_p_strCrdSzr->Add(this->CreateStrCrd(this->m_dflt_vld), 0, wxEXPAND | wxALL, 5);
 
 	this->m_dflt_vld[1] = "?";
