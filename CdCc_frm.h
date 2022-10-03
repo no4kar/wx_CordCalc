@@ -29,6 +29,11 @@
 /*====================wxWidget library====================*/
 /*#include <wx/grid.h>/**/
 /*#include <wx/valnum.h>/*wxFloatingPointValidator,*/
+#define INCLUDE_WXSQL 1
+#if INCLUDE_WXSQL
+#include "wx/wxsqlite3.h"
+#endif
+
 
 #define FRAME_CLASS_NAME CordCalcFrame
 #define APP_CLASS_NAME CordCalcApp
@@ -93,10 +98,14 @@ private:
 
 	wxBoxSizer* m_p(mainBxSzr);
 	wxBoxSizer* m_p(strCrdSzr);
+#if INCLUDE_WXSQL
+	wxSQLite3Database* m_p(db);
+#endif
 
 	size_t m(rows);
 	const size_t m(dflt_row_hight) = 20;
 	wxString m(db_path);
+
 
 #if ADD_DFLT_LN == 1
 	wxArrayString m(cmbx_chc),m(cmbx_optn), m(dflt_vld);

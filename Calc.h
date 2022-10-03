@@ -4,8 +4,8 @@
 
 
 /*typedef uint32_t flag_t;/**/
-#define BIT_FLAG(x) ((flag_t)1 << (x))
-#define PRM(enum_flag_set) ((enum_flag_set >= X_CRD) ? (enum_flag_set - X_CRD + 1) : (0))
+#define BIT_FLAG(x) ((flag_t)1 << (flag_set::x))
+#define PRM(enum_flag_set) ((flag_set::enum_flag_set >= flag_set::X_CRD) ? (flag_set::enum_flag_set - flag_set::X_CRD + 1) : (0))
 #define STR2DBL(str_obj) strtod((str_obj).c_str(), NULL)/**/
 
 

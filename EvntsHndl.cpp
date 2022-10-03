@@ -11,6 +11,24 @@ void
 FRAME_CLASS_NAME::OnQuit(
 	wxCommandEvent& evnt
 ) {
+	/*save to .db*//*D:\3\myProjects\atmpt_wxSQL*/
+#if INCLUDE_WXSQL && 0
+	this->m_p_db->Open(this->m_db_path);
+	wxSQLite3ResultSet Res = this->m_p_db->ExecuteQuery(wxString::Format(_("%s"), Select->GetValue()));
+	Grid1->ClearGrid();
+	size_t count = 0;
+
+	while (Res.NextRow())
+	{
+		Grid1->SetCellValue(count, 0, wxString::Format(_("%s"), Res.GetAsString(0)));
+		Grid1->SetCellValue(count, 1, wxString::Format(_("%i"), Res.GetInt(1)));
+		Grid1->SetCellValue(count, 2, wxString::Format(_("%s"), Res.GetAsString(2)));
+		count++;
+	}
+	Res.Finalize();
+	db->Close();
+#endif
+
 	this->Close();
 	/*evnt.Skip();/**/
 }

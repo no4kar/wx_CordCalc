@@ -20,6 +20,7 @@ FRAME_CLASS_NAME::FRAME_CLASS_NAME(const wxString& title)
 	wxFrame(NULL, wxID_ANY, title, wxPoint(50, 70), wxSize(580, 200))
 	, m_p_mainBxSzr(new wxBoxSizer(wxVERTICAL))
 	, m_p_strCrdSzr(new wxBoxSizer(wxVERTICAL))
+	, m_p_db(new wxSQLite3Database())
 	, m_rows(0)
 	, m_db_path(wxGetCwd() + wxT("\\wx_CdCc.db"))
 #if ADD_DFLT_LN == 1
