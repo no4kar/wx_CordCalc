@@ -22,7 +22,7 @@ FRAME_CLASS_NAME::FRAME_CLASS_NAME(const wxString& title)
 	, m_p_strCrdSzr(new wxBoxSizer(wxVERTICAL))
 	, m_p_db(new wxSQLite3Database())
 	, m_rows(0)
-	, m_db_path(wxGetCwd() + wxT("\\wx_CdCc.db"))
+	, m_db_path(wxGetCwd() + wxT("\\cdcc.db"))
 #if ADD_DFLT_LN == 1
 	, m_dflt_vld()
 	, m_cmbx_chc()
@@ -113,7 +113,7 @@ FRAME_CLASS_NAME::FRAME_CLASS_NAME(const wxString& title)
 	this->m_cmbx_optn = wxArrayString(_ARRAYSIZE(arrCmbxOptn), arrCmbxOptn);
 	this->m_dflt_vld = wxArrayString(_ARRAYSIZE(arrDfltVld), arrDfltVld);
 
-#if defined(_DEBUG) && 1
+#if defined(_DEBUG) || 0
 	this->m_dflt_vld[1] = wxString::FromDouble(0.0, 3);
 	this->m_dflt_vld[2] = wxString::FromDouble(0.0, 3);
 	this->m_dflt_vld[3] = "?";
@@ -138,8 +138,8 @@ FRAME_CLASS_NAME::FRAME_CLASS_NAME(const wxString& title)
 	this->m_dflt_vld[6] = "?";
 
 #else
-	this->m_p_strCrdSzr->Add(this->CreateStrCrd(this->m_dflt_vld), 0, wxEXPAND | wxALL, 5);
-#endif/*!_DEBUG && wish*/
+	this->SelectStrCrds();
+#endif/*!_DEBUG || wish*/
 
 
 	/*======== create a status bar just for fun (by default with 1 pane only) ========/**/

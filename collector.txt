@@ -1,6 +1,16 @@
+CREATE TABLE sqlite_master(
+  type text,/*sqlite_schema.type column will be one of the following text strings: 'table', 'index', 'view', or 'trigger' according to the type of object defined.*/
+  name text,
+  tbl_name text,/*The sqlite_schema.tbl_name column holds the name of a table or view that the object is associated with. For a table or view, the tbl_name column is a copy of the name column*/
+  rootpage integer,
+  sql text/*The sqlite_schema.sql column stores SQL text that describes the object*/
+);
+ 
+
+
 - CREATE A TABLE
  CREATE TABLE user (Name TEXT, Age INT, Country TEXT);
- CREATE TABLE coordinats (type TEXT, x REAL, y REAL, angle REAL, i REAL, j REAL);
+CREATE TABLE IF NOT EXISTS strcrd( id INT PRIMARY KEY NOT NULL, line_arc TEXT NOT NULL, x TEXT NOT NULL, y TEXT NOT NULL, angle TEXT NOT NULL, i TEXT NOT NULL, j TEXT NOT NULL, len_rad TEXT NOT NULL, opt TEXT);
 
 - INSERT DATA
  INSERT INTO user (Name, Age, Country) VALUES ('Itokiana', 5, 'Madagascar');
@@ -14,10 +24,17 @@
  UPDATE user SET Name="Njaka" WHERE Name="Itokiana";
 
 - DELETE DATA
+ DELETE FROM tbl_name;/*delete all records*/
  DELETE FROM user WHERE Name='Unknown';
+ DELETE FROM strcrd WHERE id>=0;
+
 
 - SELECT DATA
- SELECT * FROM user ORDER BY Name ASC;
+ SELECT * FROM user ORDER BY Name ASC;/*return all colums from user-table ordered by Name-colum*/
+ SELECT	line_arc, x, y FROM	strcrd WHERE line_arc='Line' ORDER BY id;
+ SELECT tbl_name FROM sqlite_master WHERE type='table' AND name='strcrd';/*if exists return "strcrd"*/
+ SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='strcrd';/*if exists one return "1"*/
+ SELECT sql FROM sqlite_master WHERE type='table' AND name='strcrd';/*if exists return .schema*/
 
 
  	/*ComboBox*/

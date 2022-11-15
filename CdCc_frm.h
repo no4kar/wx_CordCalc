@@ -46,13 +46,25 @@
 #define PRECISION 3
 #define CANCAT2(t1, t2) t1##t2
 #define CANCAT3(t1, t2, t3) CANCAT2(t1, t2)##t3
-#define CRTE(x) new x
-#define DSTR(x) delete x
-
+#define MY_DEBUG 1
+#define ASK_ACT(ask,act) if(##ask){##act##;}
 #define m(x) m_##x      /*member*/
 #define m_p(x) m(p_##x)     /*member pointer*/
 #define CLASS_CONSTRUCT FRAME_CLASS_NAME
 #define CLASS_DESTRUCT virtual ~CLASS_CONSTRUCT
+
+#if MY_DEBUG && _DEBUG
+#define CRTE(x) new x
+#define DSTR(x) delete x
+#define MY_TRY(x) try{
+#define MY_CATCH(x) } catch (const std::exception& ex) { wxMessageBox(ex.what()); }
+#else
+#define CRTE(x)
+#define DSTR(x)
+#define MY_TRY(x)
+#define MY_CATCH(x)
+#endif/*TO_HISTORY*/
+
 
 typedef uint32_t flag_t;
 typedef const char* cstr_t;
@@ -85,15 +97,11 @@ class FRAME_CLASS_NAME
 {
 private:
 
-#define MY_DEBUG 1
-#if defined(MY_DEBUG)
+#if MY_DEBUG && _DEBUG
 	std::vector<wxString> m(history);
-#define TO_HISTORY(ptr) 	m_history.push_back(FRAME_CLASS_NAME::Ptr2Str(ptr))
-
+	#define TO_HISTORY(ptr) 	m_history.push_back(FRAME_CLASS_NAME::Ptr2Str(ptr))
 #else
-#define TO_HISTORY(ptr)
-#define CRTE(x)
-#define DSTR(x)
+	#define TO_HISTORY(ptr)
 #endif/*TO_HISTORY*/
 
 	wxBoxSizer* m_p(mainBxSzr);
@@ -134,6 +142,8 @@ private:
 	wxBoxSizer* CreateStrCrd(wxArrayString& param);
 	bool DeleteStrCrd(wxBoxSizer* p_StrCrd);
 	wxBoxSizer* GetStrCrd(size_t indx)const;
+	void SaveStrCrds(void)const;
+	void SelectStrCrds(void);
 
 	/*get 'index' of BxSzr and empty 'params'*/
 	wxArrayString& GetParamsFromStrCrd(size_t indx, wxArrayString& params)const;

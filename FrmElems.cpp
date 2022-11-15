@@ -102,7 +102,7 @@ FRAME_CLASS_NAME::GetParamsFromStrCrd(
 	p_CmbBx = (wxComboBox*)((StrCrdPrm[indx])->GetWindow());/*now need '(*mainIter)->GetWindow()' becouse 'wxComboBox' is not a 'Sizer'*/
 	params.Add(p_CmbBx->GetValue());
 #else
-	params.Add(((wxComboBox*)((StrCrdPrm[endIndx])->GetSizer()))->GetValue());
+	params.Add(((wxComboBox*)((StrCrdPrm[indx])->GetWindow()))->GetValue());
 #endif
 
 	++indx;/*miss wxComboBox*/
@@ -115,7 +115,7 @@ FRAME_CLASS_NAME::GetParamsFromStrCrd(
 		p_TxtCtrl = (wxTextCtrl*)((StrCrdPrm[indx])->GetWindow());
 		params.Add(p_TxtCtrl->GetValue());
 #else
-		params.Add(((wxTextCtrl*)((StrCrdPrm[endIndx])->GetSizer()))->GetValue());
+		params.Add(((wxTextCtrl*)((StrCrdPrm[indx])->GetWindow()))->GetValue());
 #endif		
 	}
 
@@ -123,7 +123,7 @@ FRAME_CLASS_NAME::GetParamsFromStrCrd(
 	p_CmbBx = (wxComboBox*)((StrCrdPrm[endIndx])->GetWindow());/*now need '(*mainIter)->GetWindow()' becouse 'wxComboBox' is not a 'Sizer'*/
 	params.Add(p_CmbBx->GetValue());
 #else
-	params.Add(((wxComboBox*)((StrCrdPrm[endIndx])->GetSizer()))->GetValue());
+	params.Add(((wxComboBox*)((StrCrdPrm[endIndx])->GetWindow()))->GetValue());
 #endif
 
 	return params;
@@ -191,4 +191,118 @@ FRAME_CLASS_NAME::GetStrCrd(
 	size_t indx
 )const {
 	return (wxBoxSizer*)this->m_p_strCrdSzr->GetItem((size_t)indx)/*Returns pointer to item or NULL*/->GetSizer();
+}
+
+/**/
+void
+FRAME_CLASS_NAME::SaveStrCrds(
+	void
+)const {
+	/*save to D:\3\myProjects\cdcc.db*/
+#if INCLUDE_WXSQL && 1
+	wxSQLite3ResultSet Res;
+	wxArrayString params;
+	size_t strCrdCount = (this->m_p_strCrdSzr->GetChildren()).GetCount();
+	size_t indx = 0;
+	char buff[0xff] = { 0 };
+
+	MY_TRY(1)
+
+		this->m_p_db->Open(this->m_db_path);
+
+	Res = this->m_p_db->ExecuteQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='strcrd';");/*if exists one return "1"*/
+	if (std::strcmp(Res.GetAsString(0), "1") == NULL) {
+		Res = this->m_p_db->ExecuteQuery("DELETE FROM strcrd;");
+	}
+	else {
+		Res = this->m_p_db->ExecuteQuery("CREATE TABLE IF NOT EXISTS "
+			"strcrd"
+			"( id INT PRIMARY KEY NOT NULL"
+			", line_arc TEXT NOT NULL"
+			", x TEXT NOT NULL"
+			", y TEXT NOT NULL"
+			", angle TEXT NOT NULL"
+			", i TEXT NOT NULL"
+			", j TEXT NOT NULL"
+			", len_rad TEXT NOT NULL"
+			", opt TEXT);");
+	}
+
+	ASK_ACT(Res.IsOk() == NULL, assert(0));
+
+	for (size_t indx = 0; indx < strCrdCount; indx++)
+	{
+		this->GetParamsFromStrCrd(indx, params);
+
+		ASK_ACT(params.GetCount() != 8, assert(0));/*id+8 columls in sqlite-table*/
+
+		std::sprintf(buff, "INSERT INTO strcrd VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');"
+			, indx, params[0].c_str(), params[1].c_str(), params[2].c_str(), params[3].c_str()
+			, params[4].c_str(), params[5].c_str(), params[6].c_str(), params[7].c_str());
+
+		Res = this->m_p_db->ExecuteQuery((const char*)buff);
+		params.clear();
+	}
+
+	this->m_p_db->Close();
+
+	MY_CATCH(1)
+
+
+#endif
+}
+
+/**/
+void
+FRAME_CLASS_NAME::SelectStrCrds(
+	void
+) {
+	/*save to D:\3\myProjects\cdcc.db*/
+#if INCLUDE_WXSQL && 1
+	wxSQLite3ResultSet Res;
+	wxArrayString params;
+	/*size_t strCrdCount;/**/
+	size_t indx = 0;
+	cstr_t strCrdTblSchm =
+		"strcrd"
+		"(id INT PRIMARY KEY NOT NULL"
+		", line_arc TEXT NOT NULL"
+		", x TEXT NOT NULL"
+		", y TEXT NOT NULL"
+		", angle TEXT NOT NULL"
+		", i TEXT NOT NULL"
+		", j TEXT NOT NULL"
+		", len_rad TEXT NOT NULL"
+		", opt TEXT)";
+
+	MY_TRY(1)
+
+	this->m_p_db->Open(this->m_db_path);
+
+	Res = this->m_p_db->ExecuteQuery("SELECT sql FROM sqlite_master WHERE type='table' AND name='strcrd';");
+
+	ASK_ACT(Res.NextRow() == NULL, assert(0));
+
+	/*std::strstr(haystack, needle);*//* "IF NOT EXISTS" and ";" will be cut off*/
+
+
+	ASK_ACT(std::strstr(Res.GetAsString(0).c_str(), strCrdTblSchm) != NULL, assert(0));
+
+	Res = this->m_p_db->ExecuteQuery("SELECT * FROM strcrd;");
+	
+	for (size_t indx = 0; Res.NextRow(); indx++)
+	{
+		for (size_t i = 1, length = Res.GetColumnCount(); i < length; i++) {
+			params.Add(Res.GetAsString(i));	}
+
+		this->m_p_strCrdSzr->Add(this->CreateStrCrd(params), 0, wxEXPAND | wxALL, 5);
+		params.clear();
+	}
+	Res.Finalize();
+	this->m_p_db->Close();
+
+	MY_CATCH(1)
+
+
+#endif
 }

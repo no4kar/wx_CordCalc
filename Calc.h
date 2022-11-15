@@ -8,7 +8,6 @@
 #define PRM(enum_flag_set) ((flag_set::enum_flag_set >= flag_set::X_CRD) ? (flag_set::enum_flag_set - flag_set::X_CRD + 1) : (0))
 #define STR2DBL(str_obj) strtod((str_obj).c_str(), NULL)/**/
 
-
 enum flag_set{
 	LINE
 	, ARC_CW

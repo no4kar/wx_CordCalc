@@ -1,7 +1,7 @@
 #include"CdCc_frm.h"
 
 
-#if defined(_DEBUG)
+#if defined(MY_DEBUG)
 cstr_t
 FRAME_CLASS_NAME::Ptr2Str(
 	void* ptr
