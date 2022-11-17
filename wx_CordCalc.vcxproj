@@ -34,6 +34,7 @@
     <ClCompile Include="EvntsHndl.cpp" />
     <ClCompile Include="FrmElems.cpp" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="InteractionSQLite3.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

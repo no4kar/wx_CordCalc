@@ -138,7 +138,7 @@ FRAME_CLASS_NAME::FRAME_CLASS_NAME(const wxString& title)
 	this->m_dflt_vld[6] = "?";
 
 #else
-	this->SelectStrCrds();
+	this->SelectTrajectory();
 #endif/*!_DEBUG || wish*/
 
 

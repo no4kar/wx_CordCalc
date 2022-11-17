@@ -18,7 +18,7 @@ FRAME_CLASS_NAME::Ptr2Str(
 		? (cstr_t)buff
 		: (cstr_t)(NULL);
 }
-#endif
+#endif/*MY_DEBUG*/
 
 
 

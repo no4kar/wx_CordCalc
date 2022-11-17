@@ -12,7 +12,7 @@ FRAME_CLASS_NAME::OnQuit(
 	wxCommandEvent& evnt
 ) {
 
-	this->SaveStrCrds();
+	this->SaveTrajectory();
 	this->Close();
 	evnt.Skip();/**/
 }

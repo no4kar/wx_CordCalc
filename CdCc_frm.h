@@ -142,8 +142,10 @@ private:
 	wxBoxSizer* CreateStrCrd(wxArrayString& param);
 	bool DeleteStrCrd(wxBoxSizer* p_StrCrd);
 	wxBoxSizer* GetStrCrd(size_t indx)const;
-	void SaveStrCrds(void)const;
-	void SelectStrCrds(void);
+	/*to SQL-table*/
+	void SaveTrajectory(void)const;
+	/*from SQL-table*/
+	void SelectTrajectory(void);
 
 	/*get 'index' of BxSzr and empty 'params'*/
 	wxArrayString& GetParamsFromStrCrd(size_t indx, wxArrayString& params)const;
