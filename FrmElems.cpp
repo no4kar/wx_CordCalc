@@ -129,6 +129,7 @@ FRAME_CLASS_NAME::GetParamsFromStrCrd(
 	return params;
 	}
 
+#pragma optimize("", off)
 wxBoxSizer*
 FRAME_CLASS_NAME::SetParamsToStrCrd(
 	size_t indx
@@ -184,6 +185,7 @@ FRAME_CLASS_NAME::SetParamsToStrCrd(
 
 	return p_strCrd;
 }
+#pragma optimize("", on)
 
 /*Get BoxSizer-child from mainBoxSizer(m_p_strCrdSzr). If not exist, return nullptr*/
 wxBoxSizer*

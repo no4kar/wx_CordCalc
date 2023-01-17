@@ -38,14 +38,14 @@ static wxRealPoint RotPointByIncrAngle(const wxRealPoint& cc, const wxRealPoint&
 
 
 /*=========================================================
-------------------Line-Line calculation set----------------
+------------------Line calculation set----------------
 =========================================================*/
 
 
 /*!: line0, line1, x1, y1, len1, angle1;	?: x0, y0*/
 static
 flag_t
-ClcLinLin1(
+ClcLin1(
 	wxArrayString& crntPrms
 	, wxArrayString& nxtPrms
 ) {
@@ -70,7 +70,7 @@ ClcLinLin1(
 /*!: line0, x0, y0, line1, x1, y1;	?: len1, angle1*/
 static
 flag_t
-ClcLinLin2(
+ClcLin2(
 	wxArrayString& crntPrms
 	, wxArrayString& nxtPrms
 ) {
@@ -95,7 +95,7 @@ ClcLinLin2(
 
 static
 flag_t
-ClcLinLin3(
+ClcLin3(
 	wxArrayString& prvPrms
 	, wxArrayString& crntPrms
 ) {
@@ -122,7 +122,7 @@ ClcLinLin3(
 
 static
 flag_t
-ClcLinLin4(
+ClcLin4(
 	wxArrayString& prvPrms
 	, wxArrayString& crntPrms
 ) {
@@ -149,7 +149,7 @@ ClcLinLin4(
 
 static
 flag_t
-ClcLinLin5(
+ClcLin5(
 	wxArrayString& prvPrms
 	, wxArrayString& crntPrms
 ) {
@@ -173,7 +173,7 @@ ClcLinLin5(
 
 static
 flag_t
-ClcLinLin6(
+ClcLin6(
 	wxArrayString& prvPrms
 	, wxArrayString& crntPrms
 	, wxArrayString& nxtPrms
@@ -211,7 +211,7 @@ ClcLinLin6(
 /*!: line0, x0, y0, line1, len1, line2, x2, y2, len2;	?: x1, y1*/
 static
 flag_t
-ClcLinLin7(
+ClcLin7(
 	wxArrayString& prvPrms
 	, wxArrayString& crntPrms
 	, wxArrayString& nxtPrms
@@ -220,15 +220,6 @@ ClcLinLin7(
 	double x0, y0, len1, x2, y2, len2;
 	/*intermediate variables*/
 	double a, h, /*distance between circles centers(cc)*/d, /*angle to the X-axis*/angle;
-	char optn;
-
-#if 0
-	wxString str = crntPrms[PRM(OPTION)];
-	optn = *(str.c_str());
-#else
-	optn = *(crntPrms[PRM(OPTION)].c_str());
-#endif /**/
-
 	wxRealPoint cc, point;
 
 	if (!prvPrms[PRM(X_CRD)].ToDouble(&x0)
@@ -267,18 +258,17 @@ ClcLinLin7(
 	h = std::sqrt((len1 - a) * (len1 + a));
 	angle = AngleDegr2Xaxis(y2, y0, x2, x0);
 
-	switch (optn)
+	switch ((*(crntPrms[PRM(OPTION)].c_str()) == '1') ? 1 : 2)
 	{
-	default:
-		crntPrms[PRM(OPTION)] = "1";
-	case'1':
-		point = wxRealPoint(x0 + a, y0 + h);
-		break;
-	
-	case'2':
+	case 2:
 		point = wxRealPoint(x0 + a, y0 - h);
 		break;
+	default:
+		crntPrms[PRM(OPTION)] = "1";
+	case 1:
+		point = wxRealPoint(x0 + a, y0 + h);
 	}
+
 	cc = wxRealPoint(x0, y0);
 
 	point = RotPointByIncrAngle(cc, point, angle);
@@ -290,27 +280,72 @@ ClcLinLin7(
 
 
 /*=======================================================
-------------------Arc-Arc calculation set----------------
+------------------Arc calculation set----------------
 =======================================================*/
 
+#pragma optimize("", off)
 static
 flag_t
-ClcArcArc1(
+ClcArc1(
 	wxArrayString& prvPrms
 	, wxArrayString& crntPrms
+	, flag_set cwCcw
 ) {
-	double x0, y0, len1, angle1;
+
+	double x0, y0, x1, y1, radius;
+	wxRealPoint cc, point;
 
 	if (!prvPrms[PRM(X_CRD)].ToDouble(&x0)
 		|| !prvPrms[PRM(Y_CRD)].ToDouble(&y0)
-		|| !crntPrms[PRM(LENGTH)].ToDouble(&len1)
-		|| !crntPrms[PRM(ANGLE)].ToDouble(&angle1)) {
+		|| !crntPrms[PRM(X_CRD)].ToDouble(&x1)
+		|| !crntPrms[PRM(Y_CRD)].ToDouble(&y1)
+		|| !crntPrms[PRM(RADIUS)].ToDouble(&radius)) {
 #if defined(_DEBUG)
 		assert(0), abort();
 #else
 #endif/*!_DEBUG*/
 		return (flag_t)0;
 	}
+
+	/*		 (a,+-h)
+			   /|\
+			  / | \
+	     radius h  \
+			/   |   \
+	 (x0,y0)---len---(x1,y1)
+
+	len1 = distance between (x0,y0) and (x1,y1)
+	(1) I = len / 2
+	(2) J = (radius^2 - a^2)^0.5
+	(3) CCW == true ? (J*=1) : J*=(-1)) 
+	*/
+
+	double angle = AngleDegr2Xaxis(y1, y0, x1, x0);
+	double val_a = Hypotenuse1(y1, y0, x1, x0) / 2.0;
+	if (radius < val_a)return (flag_t)0;
+	double val_h = std::sqrt((radius * radius) - (val_a * val_a));
+
+	switch (cwCcw)
+	{
+	default:
+		assert(0);
+
+	case flag_set::ARC_CCW:
+		cc = wxRealPoint((x0 + val_a), (y0 + val_h));
+		break;
+	
+	case flag_set::ARC_CW:
+		cc = wxRealPoint((x0 + val_a), (y0 - val_h));
+	}
+
+	point = wxRealPoint(x0, y0);
+	
+	cc = RotPointByIncrAngle(point, cc, angle);
+
+	crntPrms[PRM(I_CRD)] = wxString::FromDouble(cc.x, PRECISION);
+	crntPrms[PRM(J_CRD)] = wxString::FromDouble(cc.y, PRECISION);/**/
+	return (BIT_FLAG(I_CRD) | BIT_FLAG(J_CRD));
 }
+#pragma optimize("", on)
 
 #endif // !CALCSET_H_
