@@ -34,6 +34,7 @@ GetKnownFlag(
 
 /*#############################################################################*/
 
+#pragma optimize("", off)
 bool
 FRAME_CLASS_NAME::CalcStrCrd(
 	size_t crntIndx
@@ -69,7 +70,9 @@ FRAME_CLASS_NAME::CalcStrCrd(
 
 	switch (crntKwnFlg)
 	{
-		/*#############################################################################*/
+		/*##############################################################################*/
+		/*###################		L		I		N		E	s	####################*/
+		/*##############################################################################*/
 
 	case BIT_FLAG(LINE):/*crntStrCrd = CmbBx:Line X:? Y:? Angle:? Len:?*/
 
@@ -81,9 +84,8 @@ FRAME_CLASS_NAME::CalcStrCrd(
 			) {
 			result = CANCAT2(ClcLin, 1)(crntPrms, nxtPrms);
 			result = (result) ? (bool)this->SetParamsToStrCrd(crntIndx, crntPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
 		}
-
-		break;
 
 		/*#############################################################################*/
 
@@ -100,9 +102,8 @@ FRAME_CLASS_NAME::CalcStrCrd(
 			) {
 			result = CANCAT2(ClcLin, 6)(prvPrms, crntPrms, nxtPrms);
 			result = (result) ? (bool)this->SetParamsToStrCrd(crntIndx, crntPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
 		}
-
-		break;
 
 		/*#############################################################################*/
 
@@ -114,23 +115,13 @@ FRAME_CLASS_NAME::CalcStrCrd(
 			) {
 			result = CANCAT2(ClcLin, 5)(prvPrms, crntPrms);
 			result = (result) ? (bool)this->SetParamsToStrCrd(crntIndx, crntPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
 		}
 
-		break;
-
+		
 		/*#############################################################################*/
 
 	case BIT_FLAG(LINE) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD):/*crntStrCrd = CmbBx:Line X:! Y:! Angle:? Len:?*/
-		
-		if ((nxtKwnFlg & (BIT_FLAG(ARC_CW) | BIT_FLAG(ARC_CCW)))
-			&& (nxtKwnFlg & BIT_FLAG(X_CRD))
-			&& (nxtKwnFlg & BIT_FLAG(Y_CRD))
-			&& (nxtKwnFlg & BIT_FLAG(RADIUS))
-			) {/*prvStrCrd = X:! Y:! other dont matter*/
-			result = CANCAT2(ClcArc, 1)(crntPrms, nxtPrms, (nxtKwnFlg & (BIT_FLAG(ARC_CW)) ? flag_set::ARC_CW : flag_set::ARC_CCW));
-			result = (result) ? (bool)this->SetParamsToStrCrd(nxtIndx, nxtPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
-		}
-		/**/
 	case BIT_FLAG(LINE) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD) | BIT_FLAG(ANGLE):/*crntStrCrd = CmbBx:Line X:! Y:! Angle:! Len:?*/
 	case BIT_FLAG(LINE) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD) | BIT_FLAG(ANGLE) | BIT_FLAG(LENGTH):/*crntStrCrd = CmbBx:Line X:! Y:! Angle:! Len:!*/
 
@@ -139,6 +130,7 @@ FRAME_CLASS_NAME::CalcStrCrd(
 			&& (nxtKwnFlg & BIT_FLAG(Y_CRD))) {/*nxtStrCrd = CmbBx:Line X:! Y:! Angle:!? Len:!?*/
 			result = CANCAT2(ClcLin, 2)(crntPrms, nxtPrms);
 			result = (result) ? (bool)this->SetParamsToStrCrd(nxtIndx, nxtPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
 		}
 
 		if ((nxtKwnFlg & BIT_FLAG(LINE))
@@ -147,9 +139,19 @@ FRAME_CLASS_NAME::CalcStrCrd(
 			) {
 			result = CANCAT2(ClcLin, 5)(crntPrms, nxtPrms);
 			result = (result) ? (bool)this->SetParamsToStrCrd(nxtIndx, nxtPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
 		}
 
-		break;
+		if ((nxtKwnFlg & (BIT_FLAG(ARC_CW) | BIT_FLAG(ARC_CCW)))
+			&& (nxtKwnFlg & BIT_FLAG(X_CRD))
+			&& (nxtKwnFlg & BIT_FLAG(Y_CRD))
+			&& (nxtKwnFlg & BIT_FLAG(RADIUS))
+			) {/*prvStrCrd = X:! Y:! other dont matter*/
+			result = CANCAT2(ClcArc, 1)(crntPrms, nxtPrms, (nxtKwnFlg & (BIT_FLAG(ARC_CW)) ? flag_set::ARC_CW : flag_set::ARC_CCW));
+			result = (result) ? (bool)this->SetParamsToStrCrd(nxtIndx, nxtPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
+		}
+		/**/
 
 		/*#############################################################################*/
 
@@ -159,9 +161,8 @@ FRAME_CLASS_NAME::CalcStrCrd(
 			&& (prvKwnFlg & BIT_FLAG(Y_CRD))) {/*prvStrCrd = X:! Y:! other dont matter*/
 			result = CANCAT2(ClcLin, 3)(prvPrms, crntPrms);
 			result = (result) ? (bool)this->SetParamsToStrCrd(crntIndx, crntPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
 		}
-
-		break;
 
 		/*#############################################################################*/
 
@@ -171,9 +172,8 @@ FRAME_CLASS_NAME::CalcStrCrd(
 			&& (prvKwnFlg & BIT_FLAG(Y_CRD))) {/*prvStrCrd = X:! Y:! other dont matter*/
 			result = CANCAT2(ClcLin, 4)(prvPrms, crntPrms);
 			result = (result) ? (bool)this->SetParamsToStrCrd(crntIndx, crntPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
 		}
-
-		break;
 
 		/*#############################################################################*/
 
@@ -190,25 +190,54 @@ FRAME_CLASS_NAME::CalcStrCrd(
 			) {/*prvStrCrd = X:! Y:! other dont matter*/
 				result = CANCAT2(ClcLin, 7)(prvPrms, crntPrms, nxtPrms);
 			result = (result) ? (bool)this->SetParamsToStrCrd(crntIndx, crntPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
 		}
 		/**/
-		break;
 
-		/*#############################################################################*/
 
-		case BIT_FLAG(ARC_CW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD):/*crntStrCrd = CmbBx:Line,ArcCw,ArcCCw X:! Y:!*/
-		case BIT_FLAG(ARC_CCW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD):/*crntStrCrd = CmbBx:Line,ArcCw,ArcCCw X:! Y:!*/
-		
+		/*##############################################################################*/
+		/*###################		A		R		K		s	########################*/
+		/*##############################################################################*/
+
+	case BIT_FLAG(ARC_CW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD):/*crntStrCrd = CmbBx:Line,ArcCw,ArcCCw X:! Y:!*/
+	case BIT_FLAG(ARC_CCW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD):/*crntStrCrd = CmbBx:Line,ArcCw,ArcCCw X:! Y:!*/
+	case BIT_FLAG(ARC_CW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD) | BIT_FLAG(ANGLE):/*crntStrCrd = CmbBx:Line X:! Y:! Angle:! Len:?*/
+	case BIT_FLAG(ARC_CCW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD) | BIT_FLAG(ANGLE):/*crntStrCrd = CmbBx:Line X:! Y:! Angle:! Len:?*/
+	case BIT_FLAG(ARC_CW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD) | BIT_FLAG(ANGLE) | BIT_FLAG(RADIUS):/*crntStrCrd = CmbBx:Line X:! Y:! Angle:! Len:!*/
+	case BIT_FLAG(ARC_CCW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD) | BIT_FLAG(ANGLE) | BIT_FLAG(RADIUS):/*crntStrCrd = CmbBx:Line X:! Y:! Angle:! Len:!*/
+	case BIT_FLAG(ARC_CW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD)| BIT_FLAG(I_CRD) | BIT_FLAG(J_CRD) | BIT_FLAG(ANGLE) | BIT_FLAG(RADIUS):/*crntStrCrd = CmbBx:Line X:! Y:! Angle:! Len:!*/
+	case BIT_FLAG(ARC_CCW) | BIT_FLAG(X_CRD) | BIT_FLAG(Y_CRD)| BIT_FLAG(I_CRD) | BIT_FLAG(J_CRD) | BIT_FLAG(ANGLE) | BIT_FLAG(RADIUS):/*crntStrCrd = CmbBx:Line X:! Y:! Angle:! Len:!*/
+
+
+		if ((nxtKwnFlg & BIT_FLAG(LINE))
+			&& (nxtKwnFlg & BIT_FLAG(X_CRD))
+			&& (nxtKwnFlg & BIT_FLAG(Y_CRD))
+			) {/*nxtStrCrd = CmbBx:Line X:! Y:! Angle:!? Len:!?*/
+			result = CANCAT2(ClcLin, 2)(crntPrms, nxtPrms);
+			result = (result) ? (bool)this->SetParamsToStrCrd(nxtIndx, nxtPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
+		}
+
+		if ((nxtKwnFlg & BIT_FLAG(LINE))
+			&& (nxtKwnFlg & BIT_FLAG(ANGLE))
+			&& (nxtKwnFlg & BIT_FLAG(LENGTH))
+			) {
+			result = CANCAT2(ClcLin, 5)(crntPrms, nxtPrms);
+			result = (result) ? (bool)this->SetParamsToStrCrd(nxtIndx, nxtPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
+		}
+
+
 		if ((nxtKwnFlg & (BIT_FLAG(ARC_CW) | BIT_FLAG(ARC_CCW)))
 			&& (nxtKwnFlg & BIT_FLAG(X_CRD))
 			&& (nxtKwnFlg & BIT_FLAG(Y_CRD))
 			&& (nxtKwnFlg & BIT_FLAG(RADIUS))
 			) {/*prvStrCrd = X:! Y:! other dont matter*/
-				result = CANCAT2(ClcArc, 1)(crntPrms, nxtPrms, (nxtKwnFlg & (BIT_FLAG(ARC_CW)) ? flag_set::ARC_CW : flag_set::ARC_CCW));
+			result = CANCAT2(ClcArc, 1)(crntPrms, nxtPrms, (nxtKwnFlg & (BIT_FLAG(ARC_CW)) ? flag_set::ARC_CW : flag_set::ARC_CCW));
 			result = (result) ? (bool)this->SetParamsToStrCrd(crntIndx, crntPrms, result >> X_CRD/*skip line-arc flags*/, *wxGREEN) : false;
+			break;
 		}
 		/**/
-		break;
 
 		/*#############################################################################*/
 
@@ -226,3 +255,4 @@ FRAME_CLASS_NAME::CalcStrCrd(
 
 	return result;
 }
+#pragma optimize("", on)

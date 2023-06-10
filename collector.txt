@@ -68,4 +68,7 @@ CREATE TABLE IF NOT EXISTS strcrd( id INT PRIMARY KEY NOT NULL, line_arc TEXT NO
 	this->m_p_mainBxSzr->Fit(this);/*fit empty space in window*/
 	this->m_p_mainBxSzr->SetSizeHints(this); // set hints to honor min size
 
+
+	/*/*system("D:\\3\\myProjects\\wx_Canvas\\Debug\\wx_Canvas.exe");*/
+
 #elif 0/*wxBoxSizer*/

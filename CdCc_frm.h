@@ -36,6 +36,7 @@
 
 
 #define FRAME_CLASS_NAME CordCalcFrame
+#define FRAME_2_CLASS_NAME TrajectoryFrame
 #define APP_CLASS_NAME CordCalcApp
 
 	/*DEBUG MENEGMENT*/
@@ -50,8 +51,8 @@
 #define ASK_ACT(ask,act) if(##ask){##act##;}
 #define m(x) m_##x      /*member*/
 #define m_p(x) m(p_##x)     /*member pointer*/
-#define CLASS_CONSTRUCT FRAME_CLASS_NAME
-#define CLASS_DESTRUCT virtual ~CLASS_CONSTRUCT
+#define CLASS_CONSTRUCT(class_name) class_name
+#define CLASS_DESTRUCT(class_name) virtual ~class_name
 
 #if MY_DEBUG && _DEBUG
 #define CRTE(x) new x
@@ -120,8 +121,8 @@ private:
 #endif/*ADD_DFLT_LN == 1*/
 
 public:
-	CLASS_CONSTRUCT(const wxString& title);
-	CLASS_DESTRUCT();
+	CLASS_CONSTRUCT(FRAME_CLASS_NAME)(const wxString& title, const wxPoint& pos = wxPoint(50, 70), const wxSize& size = wxSize(580, 200));/*autoinit part must be in function define part*/
+	CLASS_DESTRUCT(FRAME_CLASS_NAME)();
 
 	/*logic*/
 	/* evnt handlers*/

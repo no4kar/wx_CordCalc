@@ -15,9 +15,9 @@ wxEND_EVENT_TABLE()
 	(is going to be a FORM in a "windows" language)
 */
 
-FRAME_CLASS_NAME::FRAME_CLASS_NAME(const wxString& title)
+FRAME_CLASS_NAME::FRAME_CLASS_NAME(const wxString& title, const wxPoint& pos, const wxSize& size)
 	:
-	wxFrame(NULL, wxID_ANY, title, wxPoint(50, 70), wxSize(580, 200))
+	wxFrame(NULL, wxID_ANY, title, pos, size)
 	, m_p_mainBxSzr(new wxBoxSizer(wxVERTICAL))
 	, m_p_strCrdSzr(new wxBoxSizer(wxVERTICAL))
 	, m_p_db(new wxSQLite3Database())
@@ -28,7 +28,7 @@ FRAME_CLASS_NAME::FRAME_CLASS_NAME(const wxString& title)
 	, m_cmbx_chc()
 #endif/*ADD_DFLT_LN == 1*/
 {
-	this->SetMinSize(wxSize(580, 200));
+	this->SetMinSize(size);
 	/*wxBoxSizer* p_mainBS = new wxBoxSizer(wxVERTICAL);/*======== MAIN BoxSizer ========*/
 
 	wxMenuBar* p_menuBar1 = new wxMenuBar();

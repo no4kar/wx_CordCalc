@@ -284,6 +284,7 @@ ClcLin7(
 =======================================================*/
 
 #pragma optimize("", off)
+/*!: x0, y0, x1, y1, radius1;	?: i1, j1, angle1*/
 static
 flag_t
 ClcArc1(
@@ -320,31 +321,99 @@ ClcArc1(
 	(3) CCW == true ? (J*=1) : J*=(-1)) 
 	*/
 
-	double angle = AngleDegr2Xaxis(y1, y0, x1, x0);
-	double val_a = Hypotenuse1(y1, y0, x1, x0) / 2.0;
+	double angle = AngleDegr2Xaxis(y1, y0, x1, x0),
+		val_a = Hypotenuse1(y1, y0, x1, x0) / 2.0;
+
 	if (radius < val_a)return (flag_t)0;
+	
 	double val_h = std::sqrt((radius * radius) - (val_a * val_a));
 
-	switch (cwCcw)
-	{
+#if 1
+	switch (cwCcw) {
 	default:
 		assert(0);
 
 	case flag_set::ARC_CCW:
 		cc = wxRealPoint((x0 + val_a), (y0 + val_h));
 		break;
-	
+
 	case flag_set::ARC_CW:
 		cc = wxRealPoint((x0 + val_a), (y0 - val_h));
 	}
+#else
+	val_h *= (cwCcw == flag_set::ARC_CCW ? (1) : (-1));
+	cc = wxRealPoint((x0 + val_a), (y0 + val_h));
+#endif/*to save or not to save. what is the quesion? */
 
 	point = wxRealPoint(x0, y0);
 	
 	cc = RotPointByIncrAngle(point, cc, angle);
 
 	crntPrms[PRM(I_CRD)] = wxString::FromDouble(cc.x, PRECISION);
-	crntPrms[PRM(J_CRD)] = wxString::FromDouble(cc.y, PRECISION);/**/
-	return (BIT_FLAG(I_CRD) | BIT_FLAG(J_CRD));
+	crntPrms[PRM(J_CRD)] = wxString::FromDouble(cc.y, PRECISION);
+	crntPrms[PRM(ANGLE)] = wxString::FromDouble(angle, PRECISION);/**/
+
+	return (BIT_FLAG(I_CRD) | BIT_FLAG(J_CRD) | BIT_FLAG(ANGLE));
+}
+#pragma optimize("", on)
+
+
+
+#pragma optimize("", off)
+/*!: x0, y0, x1, i1, j1;	?: x1, y1, angle1, radius1*/
+static
+flag_t
+ClcArc2(
+	wxArrayString& prvPrms
+	, wxArrayString& crntPrms
+	, flag_set cwCcw
+) {
+
+	return -1;
+
+	double x0, y0, x1, i1, j1;
+	wxRealPoint cc, point;
+
+	if (!prvPrms[PRM(X_CRD)].ToDouble(&x0)
+		|| !prvPrms[PRM(Y_CRD)].ToDouble(&y0)
+		|| !crntPrms[PRM(X_CRD)].ToDouble(&x1)
+		|| !crntPrms[PRM(I_CRD)].ToDouble(&i1)
+		|| !crntPrms[PRM(J_CRD)].ToDouble(&j1)) {
+#if defined(_DEBUG)
+		assert(0), abort();
+#else
+#endif/*!_DEBUG*/
+		return (flag_t)0;
+	}
+
+	/*		 (i1,j1)
+			   /|\
+			  / | \
+	     radius h  \
+			/   |   \
+	 (x0,y0)---len---(x1,y1)
+
+	len1 = distance between (x0,y0) and (x1,y1)
+	radius^2 = (x-i)^2 + (y-j)^2 =>
+	(y-j)^2 = radius^2 - (x-i)^2 =>
+	(1) y = SQRT(radius^2 - (x-i)^2) + j;
+	*/
+	double radius = Hypotenuse1(j1, y0, i1, x0);
+	double y1 = std::sqrt((radius * radius) - (x1 - i1) * (x1 - i1)) + j1;
+	double angle = AngleDegr2Xaxis(y1, y0, x1, x0);
+
+	/*double angle = AngleDegr2Xaxis(y1, y0, x1, x0),
+		val_a = Hypotenuse1(y1, y0, x1, x0) / 2.0;
+
+	if (radius < val_a)return (flag_t)0;
+	
+
+
+	crntPrms[PRM(I_CRD)] = wxString::FromDouble(cc.x, PRECISION);
+	crntPrms[PRM(J_CRD)] = wxString::FromDouble(cc.y, PRECISION);
+	crntPrms[PRM(ANGLE)] = wxString::FromDouble(angle, PRECISION);/**/
+
+	return (BIT_FLAG(I_CRD) | BIT_FLAG(J_CRD) | BIT_FLAG(ANGLE));
 }
 #pragma optimize("", on)
 

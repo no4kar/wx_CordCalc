@@ -93,6 +93,7 @@ FRAME_CLASS_NAME::OnDeleteStr(
 	evnt.Skip();/**/
 }
 
+#pragma optimize("", off)
 void
 FRAME_CLASS_NAME::OnCalcStrCrd(
 	wxCommandEvent& evnt
@@ -107,6 +108,7 @@ FRAME_CLASS_NAME::OnCalcStrCrd(
 	this->m_p_mainBxSzr->Layout();
 	evnt.Skip();/**/
 }
+#pragma optimize("", on)
 
 
 void
